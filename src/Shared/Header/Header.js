@@ -36,15 +36,15 @@ const Header = () => {
                             {
                                 user?.uid ? 
                                 <>
-                                        <Nav.Link>{user?.displayName}</Nav.Link>
-                                        <Nav.Link eventKey={2}>
-                                            {
-                                                user.photoURL ? <img style={{ height: "40px", borderRadius: "50%" }} src={user?.photoURL} alt="" />
+                                    <Nav.Link>{user?.displayName}</Nav.Link>
+                                    <Nav.Link>
+                                        {
+                                            user.photoURL ? <img style={{ height: "40px", borderRadius: "50%" }} src={user?.photoURL} alt="" />
                                                     :
-                                                    <FaUserCircle />
-                                            }
-                                        </Nav.Link>
-                                        <Nav.Link ><Link onClick={providerLogOut} className='text-decoration-none bg-dark text-white py-2 px-3 rounded'>Log Out</Link> </Nav.Link>
+                                            <FaUserCircle />
+                                        }
+                                    </Nav.Link>
+                                        <><Link onClick={providerLogOut} className='text-decoration-none bg-dark text-white py-2 px-3 rounded'>Log Out</Link> </>
                                 </>
                                 : <>
                                 <Link to="/register">

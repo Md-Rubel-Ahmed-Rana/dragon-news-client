@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,10 @@ import swal from 'sweetalert';
 
 const Login = () => {
     const { loginUser } = useContext(AuthContext);
-    const navigate = useNavigate()
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const form = event.target;
@@ -16,13 +19,19 @@ const Login = () => {
         loginUser(email, password)
             .then((result) => {
                 const user = result.user;
-                console.log(user);
-                form.reset();
-                navigate("/");
-                swal("Congratulations", "You are pemitted to access our private routes", "success");
+                if (user.emailVerified){
+                    form.reset();
+                    navigate("/");
+                    setError("")
+                    swal("Congratulations", "You are pemitted to access our private routes", "success");
+                }else{
+                    swal("Sorry", "Your email is not verified. Please verify it.", "warning");
+                    return;
+                }
+                
             })
             .catch((error) => {
-                console.log(error);
+                setError(error.message)
             })
     }
     return (
@@ -38,6 +47,9 @@ const Login = () => {
                     <Form.Label>Password</Form.Label>
                     <Form.Control type="password" name='password' placeholder="Password" />
                 </Form.Group>
+                <div>
+                    <small>{error}</small>
+                </div>
                 <div className='text-center'>
                     <Button variant="primary" className='py-2 px-5' type="submit">
                         Login

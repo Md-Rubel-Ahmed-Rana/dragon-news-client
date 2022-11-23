@@ -6,7 +6,7 @@ const LeftSide = () => {
 
 
     useEffect(() => {
-        fetch("http://localhost:5000/categories")
+        fetch("https://dragon-news-server-eight.vercel.app/categories")
             .then((res) => res.json())
             .then((data) => setCategories(data))
     }, [])
@@ -16,7 +16,7 @@ const LeftSide = () => {
             <h3>All Categories</h3>
             <div>
                 {
-                    categories.map((category) => <p key={category.id}> <Link to={`/category/${category.id}`}>{category.name}</Link> </p>
+                    categories.map((category) => <div key={category.id}> <Link to={`/category/${category.id}`}>{category.name}</Link> </div>
                     )
                 }
             </div>

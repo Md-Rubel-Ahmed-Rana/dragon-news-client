@@ -1,26 +1,31 @@
 import React, { createContext, useEffect, useState } from 'react';
 import app from '../firebase/firebase.config';
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithPopup, signOut, signInWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithPopup, signOut, signInWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth"
 
 export const AuthContext = createContext();
 
 const auth = getAuth(app)
 
 const AuthProvider = ({children}) => {
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState({});
+    const [loading, setLoading] = useState(true);
 
     const providerLogin = (provider) => {
+        setLoading(true)
         return signInWithPopup(auth, provider)
     }
     const providerLogOut = () => {
+        setLoading(true)
         return signOut(auth)
     }
 
     const createUser = (email, password) => {
+        setLoading(true)
         return createUserWithEmailAndPassword(auth, email, password )
     }
 
     const loginUser = (email, password) => {
+        setLoading(true)
         return signInWithEmailAndPassword(auth, email, password )
     }
 
@@ -30,11 +35,19 @@ const AuthProvider = ({children}) => {
             photoURL: photourl
         })
     }
-    const userInfo = { user, providerLogin, setUser, providerLogOut, createUser, loginUser, profileUpdate }
+
+    const verifyEmailAddress = () => {
+        return sendEmailVerification(auth.currentUser)
+    }
+
+    const userInfo = { user, providerLogin, setUser, providerLogOut, createUser, loginUser, profileUpdate, loading, verifyEmailAddress }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+            if (currentUser === null || currentUser.emailVerified){
+                setUser(currentUser);
+            }
+            setLoading(false)
         })
 
         return () =>{
